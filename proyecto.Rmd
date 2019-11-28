@@ -52,7 +52,18 @@ Preguntas de investigación o tema abordado.
 \ldots
 
 # *Script* reproducible
+# Evaluación de los datos reales tanto el supuesto de normalidad como la homocedasticidad.
+# Carguemos paquetes y los datos 
+library(spdep)
+library(tidyverse)
+library(sf)
+library(lmtest)#Necesario para la función bptest, que evalúa homocedasticidad
+library(tmap)
+library(RColorBrewer)
+
+sismos <- st_read('data/sismos2014RD.shp')
+fallas <- st_read('data/fallasRD.shp')
+prov <- st_read(dsn = 'data/divisionRD.gpkg', layer = 'PROVCenso2010')
 
 \ldots
-
 # Referencias

@@ -1,69 +1,466 @@
 ---
-# output: github_document
-output: 
-  pdf_document:
-    keep_tex: true
-    fig_caption: true
-    latex_engine: pdflatex
-    template: svm-latex-ms.tex
-    number_sections: true
-title: | 
-        | Mi proyecto
-        | Subtítulo
-        | Subtítulo
+title: |
+  | Análisis Relacional entre los Eventos Sísmicos Ocurridos en Territorios Dominicano en el año 2014 y las Denominadas “Fallas Geológicas Mayores del País”; Análisis Geoestadístico de la Intensidad del Sismos del 03 de Julio del 2018 de República Dominicana.
 author:
-- name: Tali tali tali
-  affiliation: Estudiante, Universidad Autónoma de Santo Domingo (UASD)
-abstract: "Mi resumen"
-keywords: "palabra clave 1, palabra clave 2"
+- affiliation: Estudiante, Universidad Autónoma de Santo Domingo (UASD)
+  name: Andrés María Moreta Rosario
 date: "`r format(Sys.time(), '%B %d, %Y')`"
-geometry: margin=1in
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+  pdf_document:
+    fig_caption: yes
+    keep_tex: yes
+    latex_engine: pdflatex
+    number_sections: yes
+    template: svm-latex-ms.tex
+bibliography: bibliography.bib
+editor_options:
+  chunk_output_type: console
 fontfamily: mathpazo
 fontsize: 11pt
-# spacing: double
-bibliography: bibliography.bib
-# csl: plos-one.csl
-csl: apa.csl
-header-includes:
-  \usepackage{pdflscape}
-  \newcommand{\blandscape}{\begin{landscape}}
+geometry: margin=1in
+header-includes: \usepackage{pdflscape} \newcommand{\blandscape}{\begin{landscape}}
   \newcommand{\elandscape}{\end{landscape}}
+keywords: Sismos, Fallas Geológicas, Intensidad Sísmica
+csl: apa.csl
+abstract: 'El presente trabajo se presenta como practica final de la asignatura
+  Análisis Espacial de la Maestría en Teledetección y Ciencias Geográficas, que imparte
+  la Escuela de Ciencias Geográficas de la UASD. Para este se toma una capa de datos
+  sísmicos del año 2014 registrado por el Centro Nacional de Sismología de la UASD,
+  se le hace un análisis exploratorio de datos, para darnos cuenta si tienen tendencia
+  normal y que tanto autocorrelacionados estos se encuentran . También se trata de
+  establecer relación entre los eventos sísmicos y las fallas geológicas, consideradas
+  como mayores por el Servicio Geológico de la República Dominicana y finalmente se
+  hará un análisis geoestadístico de la intensidad de un evento sísmico ocurrido en
+  la parte Este del país en el 2018.'
 ---
 
 
 # Introducción
-
-Preguntas de investigación o tema abordado.
+Al hacer un análisis espacial es recomendable comprender los supuestos de la autocorrelación espacial, antes de hacer pruebas estadísticas o generar gráficos avanzados. Las pruebas y gráficos requieren interpretación y, al realizarlas, varios supuestos se dan por satisfechos. En tal sentido, evaluar autocorrelación requiere conocer tanto los datos como los supuestos. Los supuestos básicos que deben cumplir las observaciones son normalidad y homocedasticidad. La evaluación de normalidad es un requisito estricto al evaluar autocorrelación espacial e, igualmente, al realizar modelización espacial. Esta comprobación determinan qué tanto se acerca la distribución de los datos al modelo de la distribución normal. La mayoría de modelos estocásticos asume que las observaciones se aproximan a una media, y que se sitúan en torno a ella de forma aleatoria, siguiendo dicha distribución. Si este supuesto no se cumple, las técnicas de modelización pierden potencia o podrían arrojar relaciones erróneas. Por otra parte, la homocedasticidad aplicada al análisis espacial, asume que la media y la varianza son constantes en el espacio; es decir, se asume que no existe tendencia en los datos, y que la dispersión es invariable en las distintas localidades del conjunto de datos. No es un requisito estricto al evaluar autocorrelación, pero sí debe considerarse o atenuarse al realizar modelizaciones. La normalidad se evalúa comúnmente con la gráfica cuantilar normal, así como con pruebas estadísticas [1]. 
+En el presente trabajo se tomaran en cuenta estos supuestos para hacer análisis reacional, modelizacion y geoestadística. 
 
 # Metodología
-
-\ldots
+Se cargan los paquetes o librerías consideradas necesarias, para R poder procesar los datos y obtener resultados; se cargan las capas o datos a procesar; se realiza un análisis exploratorio de los datos y se hacen las correciones y transformaciones necesarias; se hacen algunas pruebas estadísticas a los datos sísmicos para ver si existe normalidad en estos; Se busca relación entre número de sismos y densidad de fallas por provincia y también entre la media de la magnitud de los sismos y densidad de fallas por provincia. Finalmente para la parte geoestadistica, a los distintos reportes de intensidad del evento sísmico del 2018 se le hacen los mismos análisis y pruebas estadísticas que a los sismos del 2014, se modela con varios variogramas para tomar el que mejor se ajuste a los datos, para finalizar con una interpolación Kriging.
 
 # Resultados
 
-\ldots
+## Análisis Exploratorio
+Las capas de sismos estaban en distintos tipos de sistemas de coordenadas, por lo que se procedió a llevarlas todas a WGS84_19N_UTM, que es el sistema que tienen las capas de provincias y de fallasmayores, la cual es más conveniente para los análisis posteriores.
+La capa de sismos tenia un valor de magnitud 0, lo que es inaceptable, por lo que se procedió a filtrar la capa para no considerar este valor en el análisis. 
+
+## Estadísticos para la capa de sismos
+Se puedo notar que la capa de sismos tiene 439 filas, la magnitud mínima es 1.67, la media es 3.05 y la máxima es 4.43, los histogramas presentan normalidad tanto para la variable normal como para la logarítmica, aunque para esta última presenta cierto sesgo a la izquierda, para la prueba de Shapiro Wilk los datos sugieren una confianza de un 98% y el coeficiente de significancia (p valor) es mucho menor que 0,05 para ambas variables, lo que sugiere normalidad en los datos, la prueba cuantilar sugiere una linea recta para ambas variables, aunque con una ligera curva en la logarítmica, el diagrama de caja sugiere que el 50% de los datos están al rededor de la media. En el análisis puntual no se observó autocorrelacion, lo que sugiere que en un mismo espacio ocurren sismos de diferentes magnitudes.  
+
+### Prueba de Breusch-Pagan
+Según los resultados de esta prueba para la capa de sismos tanto gráficamente, como con los valores de p, los datos son homocedasticos, por lo que son interpolables.     
+
+### Autocorrelación global por I de Moran
+Como el p valor (p-value = 0.0001693 (peso por ventana), p-value = 0.001501(peso binario)) es inferior al nivel de significancia (comúnmente fijado en 0.05 o 0.01), se rechaza la hipótesis nula de “No hay autocorrelación espacial”. 
+
+### Autocorrelación local por magnitud 
+Se puedo observar en el mapa, que las provincias La Altagracia, El Seibo y La Romana, presentan alta autocorrelacion en la media de la magnitud, lo que sugiere que las magnitudes de los sismos son semejantes en estas provincias; en tanto las provincias Barahona, Bahoruco e Independencia la autcorrelacion es baja y en las demás provincias no se evidencia autocorrelacion. La provincia de Dajabon fue excluida por no tener datos. 
+
+### Autocorrelación local por cantidad de eventos
+En el mapa se observa que las provincias La Altagracia, El Seibo, La Romana, San Pedro de Macoris y Monte Plata presentan alta autocorrelacion, lo que sugiere que la cantidad de sismos ocurridos son semejantes en esta provincias; en tanto las provincias Barahona, Bahoruco e Independencia, la autcorrelacion es baja y en las demás provincias no se evidencia autocorrelacion. La provincia de Dajabon fue excluida por no tener datos.
+
+### Estadística zonal
+La provincia con menor densidad de fallas geológicas mayores, resultó ser La Romana con unos 4.8 kilómetros, en tanto que la de mayor densidad fue Peravia con aproximadamente 250 kilómetros de fallas geológicas. 
+
+## Modelización 
+Al hacer la relación entre número de sismos y densidad de fallas por provincia, resultó un modelo homocedástico y con residuos autocorrelacionados. El modelo espacial autorregresivo obtiene un coeficiente negativo (-0.057725). En tanto que para la relación entre media de la magnitud y densidad de fallas por provincia resultó un coeficiente  no significativo (-0.00062218).  
+
+## Geoestadística
+
+### Estadísticos para la capa de intensidad del sismo del 2018
+Se puedo notar que la capa tiene 38 filas, la intensidad mínima es 1, la media es 3 y la máxima es 4, el histograma de la variable original no presenta normalidad para los datos, para la variable la logarítmica el histograma presenta algo de normalidad, para la prueba de Shapiro Wilk los datos sugiere una confianza de un 93% y un coeficiente de significancia de 0,02 para la variable normal, en tanto que para la transformada la confianza baja a 89% y el valor de p es de 0.0016 lo que sugiere algo de normalidad en los datos, la prueba cuantilar sugiere una linea ondulada para ambas variables, el diagrama de caja sugiere que el 50% de los datos están al rededor de la media.
+
+### Variogramas
+Al generar varios variogramas, los datos siguieron una distribución ondulatoria, sin embargo el variograma exponencial representó mejor los resultados visuales en el mapa, por lo que se usó este ultimo para el análisis posteriores.  
+
+### Interpolación por kriging ordinario
+Al realizar la Interpolación, se pudo observar en el mapa que las provincias que están mas cercanas al epicentro del evento sísmico tuvieron mayor nivel de intensidad.
 
 # Discusión o Conclusiones
-
-\ldots
+Fue necesario hacer algunas correcciones y transformaciones a los dato para facilitar el análisis. Para la capa de sismos los estadísticos sugirieron que la variable magnitud sísmica tiene una tendencia normal, por lo tanto, concluimos que hay, a priori, autocorrelación espacial en las magnitudes de los sismos por provincias. Se verificó en el Clusters LISA de media de la magnitud de sismos del 2014 que La Altagracia, El Seibo y La Romana, presentantan alta autocorrelacion y que en las provincias Barahona, Bahoruco e Independencia la autcorrelacion es baja. Tambien en el Clusters LISA del número de sismos de 2014 se verificó que las provincias La Altagracia, El Seibo, La Romana, San Pedro de Macoris y Monte Plata presentan alta autocorrelacion, en tanto las provincias Barahona, Bahoruco e Independencia la autcorrelacion es baja, en las demás provincias no se evidenció autocorrelación. 
+En la modelización, resultó que la densidad de fallas tiene relación inversa con el número de sismos, es decir que en la provincia donde ocurrieron la mayor cantidad de sismos no es donde se evidencia mayor densidad de fallas  y para la media de la magnitud por densidad de fallas por provincia, se evidenció un modelo poco aprovechable, es decir que este modelo no es útil para fines predictivos.
+Para el análisis geoestadístico de la intensidad del sismo del 2018, los estadísticos y los gráficos sugirieron que la variable reporte de intensidad de este evento sísmico tiene algo de normalidad. El variograma que mejor se ajustó a los datos fue el exponencial. En la Interpolación se logró demostrar que las provincias que están mas cerca del epicentro del sismo son las que presentan mayor intensidad.
 
 # Información de soporte
+Los datos usados para este trabajo fueron:
 
-\ldots
+1- Capa de eventos sísmico del 2014 del Centro Nacional de Sismología de la Universidad Autónoma de Santo Domingo.
+
+2- Capa de fallas geológicas mayores del Servicio Geológico de la República Dominicana.
+
+3- Capa de división política de la República Dominicana de la Oficina Nacional de Estadística de República Dominicana, como resultado del Censo Nacional 2010.
+
+4- Reporte de intensidad del sismo del 03 de Julio del 2018 del Servio Geológico de Los Estados Unidos de Norteamérica.
+
 
 # *Script* reproducible
-# Evaluación de los datos reales tanto el supuesto de normalidad como la homocedasticidad.
-# Carguemos paquetes y los datos 
+
+## Evaluación de los datos reales, tanto el supuesto de normalidad como la homocedasticidad.Transformaciones y creacion de objetos.
+
+Carguemos las librerías y la capa base y los datos a procesar
+
+Librerías
+
+```{r}
 library(spdep)
 library(tidyverse)
 library(sf)
-library(lmtest)#Necesario para la función bptest, que evalúa homocedasticidad
+library(lmtest) #Necesario para la función bptest, que evalúa homocedasticidad
 library(tmap)
 library(RColorBrewer)
+library(gstat) # Necesaria para geoestadistica
+```
 
+Capas base y Datos
+
+```{r}
 sismos <- st_read('data/sismos2014RD.shp')
-fallas <- st_read('data/fallasRD.shp')
+fallasmayores <- st_read('rd_fallasdiaclasasmayores_global.gpkg')
 prov <- st_read(dsn = 'data/divisionRD.gpkg', layer = 'PROVCenso2010')
+sismo <- st_read('data/sismo2018.shp')
+```
 
-\ldots
+
+### Exploración de los datos
+
+```{r}
+sismos
+sort(sismos$MAGNITUD, decreasing = T)
+sismos <- sismos %>% filter(MAGNITUD>0)
+sismos
+fallasmayores
+prov
+sismo
+```
+
+### Transformacion de sistemas de coordenadas a las capas
+
+```{r}
+crswgs84utm <- 32619
+sismoutm <- sismo %>% st_transform(crs = crswgs84utm)
+sismosutm <- sismos %>% st_transform(crs = crswgs84utm)
+```
+
+### Creacion de objetos sp
+Convenientes para manipular, importar y exportar datos espaciales
+```{r}
+prov.sp <- as_Spatial(prov)
+sismo.sp <- as_Spatial(sismoutm)
+sismos.sp <- as_Spatial(sismosutm)
+```
+
+### Superposicion de capas 
+Verificación de que las capas se superponen una a otras
+```{r}
+plot(prov.sp, border="grey", lwd=0.5)
+plot(sismos.sp, pch = 1, cex = 0.2, add=T)
+plot(sismos.sp, pch = 2, cex = 0.2, add=T)
+```
+
+
+## Estadísticos básicos para la capa de sismos
+
+```{r}
+nrow(sismos)
+summary(sismos$MAGNITUD)
+hist(sismos$MAGNITUD)
+hist(log(sismos$MAGNITUD))
+shapiro.test(sismos$MAGNITUD)
+shapiro.test(log(sismos$MAGNITUD))
+qqnorm(sismos$MAGNITUD)
+qqnorm(log(sismos$MAGNITUD))
+boxplot(sismos$MAGNITUD)
+```
+
+### Generacion de variograma para la capa de sismos
+
+```{r}
+vsismos <- variogram(MAGNITUD~1, sismos)
+plot(vsismos)
+```
+
+### Despliege de estadisticos de la magnitud de los sismos y graficado de estos en la capa de provincias
+
+```{r}
+sismosprovdf <- prov %>%
+  st_intersection(sismosutm) %>%
+  st_drop_geometry() %>%
+  select(ENLACE, MAGNITUD) %>%
+  group_by(ENLACE) %>%
+  summarise(med=mean(MAGNITUD, na.rm=T), var=var(MAGNITUD, na.rm = T),
+            min=min(MAGNITUD, na.rm=T), max=max(MAGNITUD, na.rm = T), N=n())
+sismosprovsf <- prov %>% inner_join(sismosprovdf, by = 'ENLACE')
+sismosprovsf
+plot(sismosprovsf)
+```
+
+## Vecindad
+
+```{r}
+rownames(sismosprovsf) <- sismosprovsf$TOPONIMIA
+nb <- poly2nb(sismosprovsf)
+summary(nb)
+is.symmetric.nb(nb)
+card(nb)
+```
+
+### Ponderadores espaciales (Pesos),  estandarizado por filas (w.W) y binario (w.B)
+
+```{r}
+wW <- nb2listw(nb)
+summary(wW)
+wB <- nb2listw(nb, style = 'B')
+summary(wB)
+```
+
+### Prueba de Breusch-Pagan
+ Se preparan los datos y se añaden columnas x,y
+```{r}
+coordsxy <- sismosprovsf %>%
+  st_centroid() %>% 
+  mutate(x=unlist(map(geom,1)),
+         y=unlist(map(geom,2))) %>%
+  st_drop_geometry() %>% 
+  select(ENLACE, x, y)
+coordsxy
+
+sismosprovsf <- sismosprovsf %>%
+  inner_join(coordsxy)
+
+sismosprovsf %>% lm(med~ x, .) %>% plot(3)
+sismosprovsf %>% lm(med~ y, .) %>% plot(3)
+
+sismosprovsf %>% lm(med~ x, .) %>% bptest()
+sismosprovsf %>% lm(med~ y, .) %>% bptest()
+```
+
+### Autocorrelación global por I de Moran
+
+```{r}
+(gmoranw <- moran.test(x = sismosprovsf$med, listw = wW, na.action = na.omit))
+(gmoranb <- moran.test(x = sismosprovsf$med, listw = wB, na.action = na.omit))
+```
+
+### Autocorrelación local por magnitud 
+
+```{r}
+moran.plot(x = sismosprovsf$med, listw = wW)
+source('lisaclusters.R')
+lisamap(objesp =  sismosprovsf,
+        var = 'med',
+        pesos = wW,
+        tituloleyenda = 'Significancia\n("x-y", léase\ncomo "x"\nrodeado de "y"',
+        leyenda = T,
+        anchuratitulo = 1000,
+        tamanotitulo = 16,
+        fuentedatos = 'CNS',
+        titulomapa = paste0('Clusters LISA de media de la magnitud de sismos de 2014'))
+```
+
+### Autocorrelación local por cantidad de eventos
+
+```{r}
+moran.plot(x = sismosprovsf$N, listw = wW)
+lisamap(objesp =  sismosprovsf,
+        var = 'N',
+        pesos = wW,
+        tituloleyenda = 'Significancia\n("x-y", léase\ncomo "x"\nrodeado de "y"',
+        leyenda = T,
+        anchuratitulo = 1000,
+        tamanotitulo = 16,
+        fuentedatos = 'CNS',
+        titulomapa = paste0('Clusters LISA del número de sismos de 2014'))
+```
+
+## Estadística zonal
+
+```{r}
+devtools::source_url('https://raw.githubusercontent.com/geofis/zonal-stats-sf/master/zonal-stats-sf.R')
+ezfallasprov <- zstatsf(zones = prov, values = fallasmayores, grpx = 'TOPONIMIA', grpy = 'TIPOGLOBAL')
+```
+
+Uniendo con el `sf` central:
+
+```{r}
+sismosprovsf2 <- sismosprovsf %>%
+  right_join(ezfallasprov %>% st_drop_geometry %>% rename(km_falla_por_km2 = `falla indiferenciado`), by = 'TOPONIMIA')
+```
+
+Densidad de fallas geológicas por provincias
+
+```{r}
+sismosprovsf2 %>% st_drop_geometry() %>%
+  dplyr::select(TOPONIMIA,km_falla_por_km2)
+ 
+```
+
+## Modelización
+
+### Relación entre número de sismos y densidad de fallas por provincia
+```{r}
+modlin1 <- sismosprovsf2 %>% select(km_falla_por_km2, N) %>%
+  st_drop_geometry() %>% lm(N ~ km_falla_por_km2, ., na.action = na.aggregate)
+modlin1 %>% summary
+modlin1 %>% bptest # Modelo homocedástico
+moran.test(x = as.vector(modlin1$residuals), listw = wW) # Residuos autocorrelacionados
+```
+
+### Relación entre media de la magnitud y densidad de fallas por provincia
+
+```{r}
+modlin2 <- sismosprovsf2 %>% select(km_falla_por_km2, med) %>%
+  st_drop_geometry() %>% lm(med ~ km_falla_por_km2, ., na.action = na.aggregate)
+modlin2 %>% summary
+```
+
+### Espacial autorregresivo
+
+```{r}
+sar1 <- sismosprovsf2 %>% select(N, km_falla_por_km2) %>%
+  st_drop_geometry() %>%
+  spautolm(
+    formula = N ~ km_falla_por_km2,
+    data = .,
+    listw = wW)
+summary(sar1)
+
+sar2 <- sismosprovsf2 %>% select(med, km_falla_por_km2) %>%
+  st_drop_geometry() %>%
+  spautolm(
+    formula = med ~ km_falla_por_km2,
+    data = .,
+    listw = wW)
+summary(sar2)
+```
+
+## Geoestadística
+
+En esta parte usaremos los reportes de intensidad de un evento sismico ocurrido el 03 de Julio del 2018, a las 05:31 am hora local, en las coordenadas 18.9965N y 69.6349W. Con esto se persigue la obtención de valores en lugares no reportados. 
+
+### Estadísticos básicos para la capa de sismo
+```{r}
+nrow(sismoutm)
+summary(sismoutm$CDI)
+hist(sismoutm$CDI)
+hist(log(sismoutm$CDI))
+shapiro.test(sismoutm$CDI)
+shapiro.test(log(sismoutm$CDI))
+qqnorm(sismoutm$CDI)
+qqnorm(log(sismoutm$CDI))
+boxplot(sismoutm$CDI)
+```
+
+### Creacion de columna con la variable intensidad logaritmica
+
+```{r}
+sismo <- sismoutm[,c('F__Columns', 'CDI')]
+sismo$CDIlog <- log(sismo$CDI)
+sismo
+```
+
+### Representación de reportes de intensidad
+En la siguiente sentencia se reprecentarán gráficamente tanto la variable original como la variable logaritmica.
+```{r}
+library(ggplot2)
+ggplot() +
+  geom_sf(data = prov, fill = 'white') +
+  geom_sf(data = sismoutm, aes(col = CDI), size = 6) +
+  scale_colour_gradient(low="#deebf7", high="#3182bd") +
+  geom_sf_text(data = prov, aes(label=TOPONIMIA), check_overlap = T, size = 2) +
+  geom_sf_text(data = sismoutm, aes(label=F__Columns), check_overlap = T, size = 1.5) +
+  theme_bw()
+
+
+ggplot() +
+  geom_sf(data = prov, fill = 'white') +
+  geom_sf(data = sismo, aes(col = CDIlog), size = 6) +
+  scale_colour_gradient(low="#deebf7", high="#3182bd") +
+  geom_sf_text(data = prov, aes(label=TOPONIMIA), check_overlap = T, size = 2) +
+  geom_sf_text(data = sismo, aes(label=F__Columns), check_overlap = T, size = 1.5) +
+  theme_bw()
+```
+
+##3 Variograma muestral
+Generacion de variogramas muestral para la intensidad del evento
+```{r}
+vsismo <- variogram(CDI~1, sismo[-3,])
+vsismo
+plot(vsismo, plot.numbers = T)
+
+vsismolog <- variogram(CDIlog~1, sismo[-3,])
+vsismolog
+plot(vsismolog, plot.numbers = T)
+
+vsismolog <- variogram(CDIlog~1, sismo[-3,], alpha = 0, tol.hor = 90/4)
+vsismolog
+plot(vsismolog, plot.numbers = T)
+```
+
+##3 Variogramas modelo
+
+```{r}
+vsismo_m <- fit.variogram(vsismo, vgm(model = "Sph", range = 20000))
+vsismo_m
+plot(vsismo, vsismo_m, plot.numbers = T)
+
+vsismolog_m <- fit.variogram(vsismolog, vgm(model = "Wav", range = 15000))
+vsismolog_m
+plot(vsismolog, vsismolog_m, plot.numbers = T)
+
+vsismolog_m <- fit.variogram(vsismolog, vgm(model = "Exp", range = 30000))
+vsismolog_m
+plot(vsismolog, vsismolog_m, plot.numbers = T)
+
+```
+
+### Interpolación por kriging ordinario
+
+Antes de realizar la interpolación, necesitamos una cuadrícula que “llenaremos” con las predicciones. Creemos una cuadrícula para RD, de resolución, 1x1km.
+```{r}
+library(stars)
+grd <- st_bbox(prov) %>%
+  st_as_stars(dx = 1000) %>% #100 metros=1km de resolución espacial
+  st_set_crs(crswgs84utm) %>%
+  st_crop(prov)
+grd
+plot(grd)
+```
+
+Interpolación de los datos
+
+```{r}
+ik <- krige(formula = CDIlog~1, locations = sismo, newdata = grd, model = vsismolog_m)
+ik
+summary(as.vector(exp(ik$var1.pred))) 
+plot(ik)
+```
+
+Utilicemos ggplot para representar el objeto resultante
+```{r}
+ggplot() +
+  geom_stars(data = ik, aes(fill = exp(var1.pred), x = x, y = y)) + 
+  scale_fill_gradientn(colours = brewer.pal(9, 'YlOrBr')) +
+  geom_sf(data = st_cast(prov, "MULTILINESTRING")) +
+  geom_sf(data = sismo) +
+  geom_sf_text(data = sismo, aes(label=round(exp(CDIlog),0)), col = 'white', check_overlap = T, size = 4, nudge_x = 5000) +
+  theme_bw()
+```
+
 # Referencias
+
+[1]-Material de Apoyo de la asignatura Analisis Espacial de la Maestria en Teledeteccion y Ciencias Gegraficas de Escuela de Ciencias Geofrafica de la Universidad Autonoma de Santo Domingo, impartida por el Maestro José Ramon Martinez Beltra.
+
+[2]- https://earthquake.usgs.gov/earthquakes/eventpage/us1000ehsg/dyfi/intensity 
+
+
+
+
+
+

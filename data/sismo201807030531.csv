@@ -1,0 +1,40 @@
+# Columns: ZIP/Location,CDI,No. of responses,Hypocentral distance,Latitude,Longitude,Suspect?,City
+Pimentel::Duarte::Dominican Republic,3.3,1,99,19.18,-70.11,0,Pimentel
+San Francisco de Macorís::Duarte::Dominican Republic,2,1,111,19.3,-70.25,0,San Francisco de Macorís
+El Llano::Elías Piña::Dominican Republic,2.6,3,227,18.82,-71.63,0,El Llano
+Jamao al Norte::Espaillat::Dominican Republic,2,1,140,19.65,-70.45,0,Jamao al Norte
+Moca::Espaillat::Dominican Republic,2,1,133,19.4,-70.53,0,Moca
+Hato Mayor::Hato Mayor::Dominican Republic,4.2,3,96,18.77,-69.26,0,Hato Mayor
+Higüey::La Altagracia::Dominican Republic,3.1,1,135,18.62,-68.71,0,Higüey
+Otra Banda::La Altagracia::Dominican Republic,3,4,137,18.65,-68.67,0,Otra Banda
+La Romana::La Romana::Dominican Republic,2,3,126,18.43,-68.97,0,La Romana
+La Vega::La Vega::Dominican Republic,3.4,1,128,19.22,-70.53,0,La Vega
+Tireo::La Vega::Dominican Republic,2.9,2,138,18.93,-70.68,0,Tireo
+Nagua::María Trinidad Sánchez::Dominican Republic,2,1,96,19.38,-69.85,0,Nagua
+Bonao::Monseñor Nouel::Dominican Republic,3.1,5,117,18.95,-70.41,0,Bonao
+Piedra Blanca::Monseñor Nouel::Dominican Republic,3.1,5,110,18.83,-70.3,0,Piedra Blanca
+Don Juan::Monte Plata::Dominican Republic,2,1,92,18.83,-69.95,0,Don Juan
+Gonzalo::Monte Plata::Dominican Republic,4.1,1,84,18.95,-69.75,0,Gonzalo
+Los Botados::Monte Plata::Dominican Republic,2.2,1,96,18.73,-70,0,Los Botados
+Monte Plata::Monte Plata::Dominican Republic,4.1,4,88,18.81,-69.79,0,Monte Plata
+Yamasá::Monte Plata::Dominican Republic,3.8,1,96,18.77,-70.02,0,Yamasá
+Nizao::Peravia::Dominican Republic,3.6,2,132,18.25,-70.2,0,Nizao
+Puerto Plata::Puerto Plata::Dominican Republic,1,1,165,19.8,-70.7,0,Puerto Plata
+Sosúa::Puerto Plata::Dominican Republic,2.4,2,150,19.75,-70.52,0,Sosúa
+Tenares::Salcedo::Dominican Republic,4,3,120,19.37,-70.35,0,Tenares
+Las Terrenas::Samaná::Dominican Republic,3.2,19,91,19.32,-69.53,0,Las Terrenas
+Samaná::Samaná::Dominican Republic,4.1,4,92,19.21,-69.33,0,Samaná
+Sánchez::Samaná::Dominican Republic,4.3,2,87,19.23,-69.62,0,Sánchez
+Bajos de Haina::San Cristóbal::Dominican Republic,4.4,2,113,18.42,-70.03,0,Bajos de Haina
+El Carril::San Cristóbal::Dominican Republic,3.6,93,111,18.45,-70.02,0,El Carril
+Los Cacaos::San Cristóbal::Dominican Republic,2,1,121,18.52,-70.3,0,Los Cacaos
+San Gregorio de Nigua::San Cristóbal::Dominican Republic,2.9,1,117,18.38,-70.08,0,San Gregorio de Nigua
+Villa Altagracia::San Cristóbal::Dominican Republic,2,1,107,18.67,-70.17,0,Villa Altagracia
+Los Llanos::San Pedro de Macorís::Dominican Republic,3.6,2,94,18.62,-69.5,0,Los Llanos
+Ramón Santana::San Pedro de Macorís::Dominican Republic,2.2,1,108,18.55,-69.18,0,Ramón Santana
+San Pedro de Macorís::San Pedro de Macorís::Dominican Republic,3.8,5,108,18.46,-69.31,0,San Pedro de Macorís
+Licey al Medio::Santiago::Dominican Republic,2,1,140,19.43,-70.6,0,Licey al Medio
+San José de las Matas::Santiago::Dominican Republic,2,1,164,19.33,-70.93,0,San José de las Matas
+Santiago::Santiago::Dominican Republic,2.9,14,149,19.48,-70.69,0,Santiago
+Santo Domingo::Santo Domingo::Dominican Republic,3.9,531,105,18.48,-69.91,0,Santo Domingo
+Pirates Well::Mayaguana::Bahamas,2,1,529,22.43,-73.08,0,Pirates Well
